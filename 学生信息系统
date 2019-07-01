@@ -1,0 +1,136 @@
+/*
+文件名：1_1_2_9.cpp
+作者：汤善康
+日期：2019年7月1日
+*/
+#include<stdio.h>
+#include<stdlib.h>
+#include<malloc.h>
+
+typedef int Status;
+//采用线性表链式存储结构创建一个信息管理系统
+typedef struct
+{
+	long ID;
+	char name[10];
+	int grade;
+}student;
+typedef student elemtype;
+//建立单链表存储结构的线性表
+typedef struct Node
+{
+	elemtype data;
+	struct Node *next;
+}Node;
+typedef Node *LinkList;
+//录入学生信息
+void Input(elemtype &L)
+{
+	printf("请输入学生ID：\n");
+	scanf_s("%d", &L.ID);
+	printf("请输入学生姓名：\n");
+	scanf("%s", L.name);
+	printf("请输入学生成绩：\n");
+	scanf_s("%d", &L.grade);
+}
+//逆位序输入n个元素的值，建立带有头结点的单链线性表
+void CreateListHead(LinkList &L, int n)
+{
+	LinkList p;
+	int i;
+	elemtype a;//插入数据
+	L = (LinkList)malloc(sizeof(Node));
+	for (i = 0; i < n; i++)//采用头插法循环插入元素
+	{
+		Input(a);//调用函数输入学生信息
+		p = (LinkList)malloc(sizeof(Node));
+		p->data = a;
+		p->next = L->next;
+		L->next = p;
+	}
+}
+//打印输出学生信息
+void Output(elemtype &L)
+{
+	printf("%8d%8s%8d\n", L.ID, L.name, L.grade);
+}
+//在第n个位置插入学生信息
+Status ListInsert(LinkList &L, int n)
+{
+	LinkList p,s;
+	int i;
+	//p = (LinkList)malloc(sizeof(Node));
+	p = L;
+	for (i = 1;p, i <= n - 1; i++)
+	{
+		p = p->next;
+	}
+	if (!p)return 0;//检查参数合法性，p为空返回0
+	else
+	{
+		s = (LinkList)malloc(sizeof(Node));//生成新的结点
+		Input(s->data);//调用输入函数输入新结点数据域的值
+		s->next = p->next;
+		p->next = s;//将新结点插入到L中
+		return 1;//插入成功，返回1
+	}
+}
+int main()
+{
+	LinkList rl,p;
+	int i;
+	int n;//元素个数
+	int a;//选择程序序号
+	int b;//要查找的学生序号
+	int c;//要插入学生信息的位置
+	printf("**********\n");
+	printf("1.建立单链表\n");
+	printf("2.显示学生信息\n");
+	printf("3.查找学生信息\n");
+	printf("4.插入学生信息\n");
+	printf("**********\n");
+	while (1)
+	{
+		printf("请输入要选择的程序序号：\n");
+		scanf("%d", &a);
+		switch (a)
+		{
+		case 1:
+			printf("请输入要存入的学生信息数\n");
+			scanf_s("%d", &n);
+			CreateListHead(rl, n);//调用函数建立单链表
+			break;
+		case 2:
+			p = rl;
+			for (i = 0; i < n; i++)
+			{
+				p = p->next;//使指针p指向下一结点
+				Output(p->data);//打印输出该结点处学生信息
+			}
+			break;
+		case 3:
+			p = rl;
+			printf("请输入要查找的学生序号：");
+			scanf("%d", &b);
+			for (i = 1; i <= b; i++)
+			{
+				p = p->next;
+			}
+			
+			Output(p->data);
+			break;
+		case 4:
+			printf("请输入要插入学生信息的位置：");
+			scanf("%d", &c);
+			if (ListInsert(rl, c) == 1)//调用插入函数在第c个位置插入学生信息
+			{
+				n++;
+				printf("成功插入\n");
+			}
+			else
+				printf("插入失败\n");
+			break;
+		}
+		
+	}
+}
